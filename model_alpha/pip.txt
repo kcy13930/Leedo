@@ -1,8 +1,0 @@
-pip3 install conda install pytorch==1.6.0 torchvision==0.7.0 cpuonly -c pytorch
-pip3 install tqdm
-pip3 install numpy
-pip3 install scikit-learn
-pip3 install nltk
-pip3 install sentecepiece
-pip3 install sentece_transformers
-pip3 install pandas
