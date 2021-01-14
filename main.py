@@ -3,11 +3,11 @@ from slacker import Slacker
 from flask import Flask, request, make_response
 import numpy as np
 import pandas as pd
-from db import dbModule as db
+from server.db import dbModule as db
 from sentence_transformers import SentenceTransformer, util
 
 
-token =
+token = ''
 slack = Slacker(token)
 
 # slack.chat.post_message("#chatbot-test-channel", "slacker 테스트")
@@ -38,11 +38,11 @@ def reconstruct_dataframe(json_df):
     return reconstruct_df
 
 # 데이터 로드
-databse = db.Database()
+database = db.Database()
 qa_sql = "SELECT * FROM leedo.qa_dataset"
 ig_sql = "SELECT * FROM leedo.imground"
-dataset_qa = json.dumps(db_class.execute_all(qa_sql))
-dataset_ig = json.dumps(db_class.execute_all(ig_sql))
+dataset_qa = pd.read_json(json.dumps(database.execute_all(qa_sql)),orient='records')
+dataset_ig = pd.read_json(json.dumps(database.execute_all(ig_sql)),orient='records')
 #dataset_ig = pd.read_json('/Users/sinjaeug/Desktop/프로젝트/2020_2학기 프로젝트/Leedo Dataset/imground_dataset.json')
 #dataset_qa = pd.read_json('/Users/sinjaeug/Desktop/프로젝트/2020_2학기 프로젝트/Leedo Dataset/qa_dataset.json')
 dataset_qa = reconstruct_dataframe(dataset_qa)
