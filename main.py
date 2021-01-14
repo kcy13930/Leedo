@@ -43,6 +43,14 @@ qa_sql = "SELECT * FROM leedo.qa_dataset"
 ig_sql = "SELECT * FROM leedo.imground"
 dataset_qa = pd.read_json(json.dumps(database.execute_all(qa_sql)),orient='records')
 dataset_ig = pd.read_json(json.dumps(database.execute_all(ig_sql)),orient='records')
+
+columns = ['QAID','질문 날짜','답변 날짜',
+           '질문 메세지 id','답변 메세지 id',
+           '질문자 id', '답변자 id',
+           '질문자 이름', '답변자 이름',
+           '질문내용', '답변내용','채널']
+dataset_qa.columns = columns
+dataset_ig.columns = columns
 #dataset_ig = pd.read_json('/Users/sinjaeug/Desktop/프로젝트/2020_2학기 프로젝트/Leedo Dataset/imground_dataset.json')
 #dataset_qa = pd.read_json('/Users/sinjaeug/Desktop/프로젝트/2020_2학기 프로젝트/Leedo Dataset/qa_dataset.json')
 dataset_qa = reconstruct_dataframe(dataset_qa)
