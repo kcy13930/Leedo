@@ -26,8 +26,10 @@ class Database():
     def commit():
         self.db.commit()
 
+'''
 db_class = dbModule.Database()
 sql = "SELECT QAID, question_context FROM leedo.qa_dataset"
 # sql = "SELECT QAID, question_context FROM leedo.imground" 찬의형
 result = db_class.execute_all(sql)
 print(result)
+'''

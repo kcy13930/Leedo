@@ -3,6 +3,7 @@ from slacker import Slacker
 from flask import Flask, request, make_response
 import numpy as np
 import pandas as pd
+from db import dbModule as db
 from sentence_transformers import SentenceTransformer, util
 
 
@@ -37,8 +38,13 @@ def reconstruct_dataframe(json_df):
     return reconstruct_df
 
 # 데이터 로드
-dataset_ig = pd.read_json('/Users/sinjaeug/Desktop/프로젝트/2020_2학기 프로젝트/Leedo Dataset/imground_dataset.json')
-dataset_qa = pd.read_json('/Users/sinjaeug/Desktop/프로젝트/2020_2학기 프로젝트/Leedo Dataset/qa_dataset.json')
+databse = db.Database()
+qa_sql = "SELECT * FROM leedo.qa_dataset"
+ig_sql = "SELECT * FROM leedo.imground"
+dataset_qa = json.dumps(db_class.execute_all(qa_sql))
+dataset_ig = json.dumps(db_class.execute_all(ig_sql))
+#dataset_ig = pd.read_json('/Users/sinjaeug/Desktop/프로젝트/2020_2학기 프로젝트/Leedo Dataset/imground_dataset.json')
+#dataset_qa = pd.read_json('/Users/sinjaeug/Desktop/프로젝트/2020_2학기 프로젝트/Leedo Dataset/qa_dataset.json')
 dataset_qa = reconstruct_dataframe(dataset_qa)
 
 # 데이터 로드 후 index 순서대로 정렬
