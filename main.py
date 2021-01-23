@@ -129,7 +129,12 @@ attachment_answer_json = {
 
 
 # embedding 모듈 load
-embedder = SentenceTransformer('distiluse-base-multilingual-cased-v2')
+
+
+# 1.2 ver
+model_path = './output/training_stsbenchmark_distilbert-base-multilingual-cased-v2-KakaoSTS'
+embedder = SentenceTransformer(model_path)
+# embedder = SentenceTransformer('distiluse-base-multilingual-cased-v2') # 1.1ver
 # embedder = SentenceTransformer('xlm-r-bert-base-nli-stsb-mean-tokens')
 
 
@@ -247,7 +252,7 @@ def im_ground(query_input):
     for idx in range(len(Top_Context)):
         if number > 5:
             break
-        if not name_ig[idx] in name_overlap:
+        if not name_ig[Top_Context[idx][1]] in name_overlap:
             temp = str(idx + 1) + "번" + name_ig[Top_Context[idx][1]].strip() + ", " + corpus_ig[Top_Context[idx][1]].strip() + "\n"
             result = result + str(temp)
             name_overlap.append(name_ig[Top_Context[idx][1]].strip())
