@@ -5,4 +5,4 @@
 
 Distilbert-base-multilingual-cased-v2-KakaoSTS (추가학습)
 
- https://drive.google.com/drive/folders/12HsCjGBPPhWvGucnlDXpszSCdFUPnZGd?usp=sharing
+https://drive.google.com/drive/folders/12HsCjGBPPhWvGucnlDXpszSCdFUPnZGd?usp=sharing
