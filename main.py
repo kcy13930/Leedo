@@ -147,16 +147,20 @@ app = Flask(__name__)
 
 
 def get_answer():
-    return "안녕하세요"
+    return "EA (EconoAsistant) 사용법 \n\n1. Q&A \n\n - 키워드를 통해 분야에 대해 알아봐요 - \n   " \
+           "느낌표 1개 (!)를 붙이고 키워드나 문구를 \n   적으면 관련된 질의 응답을 알려드립니다.\n\n2. " \
+           "I'm Ground \n\n - 키워드를 통해 에코노인을 알아봐요 - \n   느낌표 2개 (!!)를 붙이고 키워드나 " \
+           "문구를 \n   적으면 관련된 사람을 알려드립니다. \n\n%주의사항% \n\n - 맞춤법 필수, 이모티콘이나 " \
+           "특수문자를 사용하지 마세요 "
 
 
 def event_handler(event_type, slack_event):
     print("3번오류")
-    # if event_type == "app_mention":
-    #     channel = slack_event["event"]["channel"]
-    #     text = get_answer()
-    #     slack.chat.post_message(channel, text)
-    #     return make_response("앱 멘션 메시지가 보내졌습니다.", 202,)
+    if event_type == "app_mention":
+        channel = slack_event["event"]["channel"]
+        text = get_answer()
+        slack.chat.post_message(channel, text)
+        return make_response("앱 멘션 메시지가 보내졌습니다.", 202,)
 
     if event_type == "message":
         channel = slack_event["event"]["channel"]
