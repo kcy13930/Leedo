@@ -5,10 +5,11 @@ import numpy as np
 import pandas as pd
 from server.db import dbModule as db
 from sentence_transformers import SentenceTransformer, util
+import os
 import scipy.stats
 
 
-token = ''
+token =
 slack = Slacker(token)
 
 # slack.chat.post_message("#chatbot-test-channel", "slacker 테스트")
@@ -18,38 +19,69 @@ top_results =''
 
 
 def reconstruct_dataframe(json_df):
-    temp1 = []
-    temp2 = []
+    questions = []
+    results = []
     id_temp = json_df.loc[0, "질문 메세지 id"]
+    url = 'http://168.131.30.128:8080/'
+    path = 'server/data/rsc/'
+
+    question_file = path + json_df.loc[0, "질문자 file"]
+    qeustion_file += '/' + os.listdir(question_file)[0]
+    qeustion_file = url + question_file
     question_df = json_df.loc[0, "질문내용"]
+    question_df = question_df if question_file is None else question_df + '\n' + question_file
+
+    result_file = path + json_df.loc[0, "답변자 file"]
+    result_file += '/' + os.listdir(result_file)[0]
+    result_file = url + result_file
     result_df = "답변(" + json_df.loc[0, '답변자 이름'] + ")" + '\n' + json_df.loc[0, "답변내용"]
+    result_df = result_df if result_file is None else result_df + '\n' + result_file
 
     for i in range(1, len(json_df)):
         if id_temp != json_df.loc[i, "질문 메세지 id"]:
-            temp1.append(question_df)
+            questions.append(question_df)
+
+            result_file = path +  json_df.loc[i, "답변자 file"]
+            result_file += '/' + os.listdir(result_file)[0]
+            result_file = url + result_file
             result_df = "질문(" + json_df.loc[i - 1, '질문자 이름'] + ')' + '\n' + question_df + "\n\n\n" +result_df
-            temp2.append(result_df)
+            result_df = result_df if result_file is None else result_df + '\n' + result_file
+
+            results.append(result_df)
             result_df = ''
 
         id_temp = json_df.loc[i, "질문 메세지 id"]
-        question_df = json_df.loc[i, "질문내용"]
-        result_df = result_df + '\n\n' + "답변(" + json_df.loc[i, '답변자 이름'] + ")" + '\n' + str(json_df.loc[i, "답변내용"])
 
-    reconstruct_df = pd.DataFrame({"질문내용": temp1, "결과 값": temp2})
+        question_file = path + json_df.loc[i, "질문자 file"]
+        qeustion_file += '/' + os.listdir(question_file)[0]
+        qeustion_file = url + question_file
+        question_df = json_df.loc[i, "질문내용"]
+
+        result_file = path + json_df.loc[i, "답변자 file"]
+        result_file += '/' + os.listdir(result_file)[0]
+        result_file = url + result_file
+        result_df = result_df + '\n\n' + "답변(" + json_df.loc[i, '답변자 이름'] + ")" + '\n' + str(json_df.loc[i, "답변내용"])
+        result_df = result_df if result_file is None else result_df + '\n' + result_file
+
+    reconstruct_df = pd.DataFrame({"질문내용": questions, "결과 값": results})
     return reconstruct_df
 
 # 데이터 로드
 database = db.Database()
 qa_sql = "SELECT * FROM leedo.qa_dataset"
 ig_sql = "SELECT * FROM leedo.imground"
-dataset_qa = pd.read_json(json.dumps(database.execute_all(qa_sql)),orient='records')
-dataset_ig = pd.read_json(json.dumps(database.execute_all(ig_sql)),orient='records')
+dataset_qa = database.execute_all(qa_sql)
+dataset_ig = database.execute_all(ig_sql)
+dataset_qa = pd.DataFrame(dataset_qa)
+dataset_ig = pd.DataFrame(dataset_ig)
 
 columns = ['QAID','질문 날짜','답변 날짜',
            '질문 메세지 id','답변 메세지 id',
            '질문자 id', '답변자 id',
            '질문자 이름', '답변자 이름',
-           '질문내용', '답변내용','채널']
+           '질문내용', '답변내용',
+           '질문자 file', '답변자 file',
+           '채널']
 dataset_qa.columns = columns
 dataset_ig.columns = columns
 #dataset_ig = pd.read_json('/Users/sinjaeug/Desktop/프로젝트/2020_2학기 프로젝트/Leedo Dataset/imground_dataset.json')
@@ -294,6 +326,9 @@ def hears():
 def index():
     return "Hello World"
 
+@app.route('/server/data/rsc/<path:filename>')
+def download_file(filename):
+    return send_from_directory("res", filename)
 
 @app.route("/slack/message_actions", methods=["POST"])
 def message_actions():
