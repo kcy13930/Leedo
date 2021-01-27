@@ -32,7 +32,7 @@ def reconstruct_dataframe(json_df):
     question_df = question_df if question_file is None else question_df + '\n' + question_file
 
     result_file = path + json_df.loc[0, "답변자 file"]
-    result_file += '/' + os.listdir(result_file)[0]
+    result_file += '/' + os.listdir(result_file)[0] if os.path.isdir(result_file) else ''
     result_file = url + result_file
     result_df = "답변(" + json_df.loc[0, '답변자 이름'] + ")" + '\n' + json_df.loc[0, "답변내용"]
     result_df = result_df if result_file is None else result_df + '\n' + result_file
@@ -42,7 +42,7 @@ def reconstruct_dataframe(json_df):
             questions.append(question_df)
 
             result_file = path +  json_df.loc[i, "답변자 file"]
-            result_file += '/' + os.listdir(result_file)[0]
+            result_file += '/' + os.listdir(result_file)[0] if os.path.isdir(result_file) else ''
             result_file = url + result_file
             result_df = "질문(" + json_df.loc[i - 1, '질문자 이름'] + ')' + '\n' + question_df + "\n\n\n" +result_df
             result_df = result_df if result_file is None else result_df + '\n' + result_file
@@ -59,7 +59,7 @@ def reconstruct_dataframe(json_df):
         question_df = question_df if question_file is None else question_df + '\n' + question_file
 
         result_file = path + json_df.loc[i, "답변자 file"]
-        result_file += '/' + os.listdir(result_file)[0]
+        result_file += '/' + os.listdir(result_file)[0] if os.path.isdir(result_file) else ''
         result_file = url + result_file
         result_df = result_df + '\n\n' + "답변(" + json_df.loc[i, '답변자 이름'] + ")" + '\n' + str(json_df.loc[i, "답변내용"])
         result_df = result_df if result_file is None else result_df + '\n' + result_file
