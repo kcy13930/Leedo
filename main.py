@@ -26,7 +26,7 @@ def reconstruct_dataframe(json_df):
     path = 'server/data/rsc/'
 
     question_file = path + json_df.loc[0, "질문자 file"]
-    question_file += '/' + os.listdir(question_file)[0] # error 부뷴
+    question_file += '/' + os.listdir(question_file)[0] if os.path.isdir(question_file) else ''
     question_file = url + question_file
     question_df = json_df.loc[0, "질문내용"]
     question_df = question_df if question_file is None else question_df + '\n' + question_file
@@ -53,9 +53,10 @@ def reconstruct_dataframe(json_df):
         id_temp = json_df.loc[i, "질문 메세지 id"]
 
         question_file = path + json_df.loc[i, "질문자 file"]
-        qeustion_file += '/' + os.listdir(question_file)[0]
+        qeustion_file += '/' + os.listdir(question_file)[0] if os.path.isdir(question_file) else ''
         qeustion_file = url + question_file
         question_df = json_df.loc[i, "질문내용"]
+        question_df = question_df if question_file is None else question_df + '\n' + question_file
 
         result_file = path + json_df.loc[i, "답변자 file"]
         result_file += '/' + os.listdir(result_file)[0]
