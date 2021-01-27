@@ -26,8 +26,8 @@ def reconstruct_dataframe(json_df):
     path = 'server/data/rsc/'
 
     question_file = path + json_df.loc[0, "질문자 file"]
-    qeustion_file += '/' + os.listdir(question_file)[0]
-    qeustion_file = url + question_file
+    question_file += '/' + os.listdir(question_file)[0] # error 부뷴
+    question_file = url + question_file
     question_df = json_df.loc[0, "질문내용"]
     question_df = question_df if question_file is None else question_df + '\n' + question_file
 
@@ -83,7 +83,6 @@ columns = ['QAID','질문 날짜','답변 날짜',
            '질문자 file', '답변자 file',
            '채널']
 dataset_qa.columns = columns
-dataset_ig.columns = columns
 #dataset_ig = pd.read_json('/Users/sinjaeug/Desktop/프로젝트/2020_2학기 프로젝트/Leedo Dataset/imground_dataset.json')
 #dataset_qa = pd.read_json('/Users/sinjaeug/Desktop/프로젝트/2020_2학기 프로젝트/Leedo Dataset/qa_dataset.json')
 dataset_qa = reconstruct_dataframe(dataset_qa)
