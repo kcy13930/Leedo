@@ -161,7 +161,7 @@ attachment_answer_json = {
 
 
 # 1.2 ver
-model_path = './output/training_stsbenchmark_distilbert-base-multilingual-cased-v2-KakaoSTS'
+model_path = 'distiluse-base-multilingual-cased-v2'
 embedder = SentenceTransformer(model_path)
 # embedder = SentenceTransformer('distiluse-base-multilingual-cased-v2') # 1.1ver
 # embedder = SentenceTransformer('xlm-r-bert-base-nli-stsb-mean-tokens')
