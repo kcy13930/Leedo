@@ -329,7 +329,7 @@ def index():
 @app.route('/server/data/rsc/<path:filename>')
 def download_file(path):
     path = 'server/data/rsc/'
-    filename = path + os.listdir(path+filename)[0]
+    filename = os.listdir(path+filename)[0]
     return send_from_directory("res", filename)
 
 @app.route("/slack/message_actions", methods=["POST"])
