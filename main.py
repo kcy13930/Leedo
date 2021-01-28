@@ -238,70 +238,51 @@ def question_answer(query_input):
     # query embedding
     query_embedding = embedder.encode(query, convert_to_tensor=True)
 
-    # Spearman 상관계수가 0.3보다 높은 값의 내용만 얻음
-    Top_Context = []
+    # cosine_similarity 계산
+    cos_scores = util.pytorch_cos_sim(query_embedding, corpus_embeddings_qa)[0]
 
-    for idx in range(len(corpus_embeddings_ig)):
-        spearmanr = scipy.stats.spearmanr(query_embedding, corpus_embeddings_qa[idx])
-        if abs(spearmanr[0]) > 0.3:
-            Top_Context.append([spearmanr[0], idx])
-
-    # 상위부터 정렬
-    Top_Context = sorted(Top_Context, reverse=True)
-
+    # We use np.argpartition, to only partially sort the top_k results
     top_k = 5
+    top_results = np.argpartition(-cos_scores, range(top_k))[0:top_k]
 
     read_text_to_json = json.dumps(attachment_answer_json)
     read_json = json.loads(read_text_to_json)
-
-    for i in range(top_k):
-        temp_str = str(i + 1) + "번 " + corpus_qa[Top_Context[idx][1]].strip()
-        temp_str = temp_str[0:30] + "(%2.f%%)" % (Top_Context[idx][0]*100)
+    for i, idx in enumerate(top_results[0:top_k]):
+        temp_str = str(i+1) + "번 " + corpus_qa[idx].strip()
+        temp_str = temp_str[0:30] + "(%2.f%%)" % (cos_scores[idx]*100)
         read_json["blocks"][0]['elements'][0]['options'][i]['text']['text'] = temp_str
-
     return read_json
 
 
 def im_ground(query_input):
     query = delete_exclamation_mark(query_input)
 
-    # query_embedding
+    # query embedding
     query_embedding = embedder.encode(query, convert_to_tensor=True)
 
-    # Spearman 상관계수가 0.3보다 높은 값의 내용만 얻음
-    Top_Context = []
+    # cosine_similarity 계산
+    cos_scores = util.pytorch_cos_sim(query_embedding, corpus_embeddings_ig)[0]
 
-    for idx in range(len(corpus_embeddings_ig)):
-        spearmanr = scipy.stats.spearmanr(query_embedding, corpus_embeddings_ig[idx])
-        if abs(spearmanr[0]) > 0.3:
-            Top_Context.append([spearmanr[0], idx])
+    # 상위 다섯개 출력 (10개 여분으로 세팅하고, 중복 제거)
 
-    #상위부터 정렬
-    Top_Context = sorted(Top_Context, reverse=True)
+    top_k = 10
+    top_results_ig = np.argpartition(-cos_scores, range(top_k))
 
     name_overlap = []
 
     number = 1
-    result = ""
-
-    # 상위 5개 출력 (중복제거)
-
-    for idx in range(len(Top_Context)):
+    result =''
+    for i, idx in enumerate(top_results_ig[0:top_k]):
         if number > 5:
             break
-        if not name_ig[Top_Context[idx][1]] in name_overlap:
-            temp = str(idx + 1) + "번" + name_ig[Top_Context[idx][1]].strip() + ", " + corpus_ig[Top_Context[idx][1]].strip() + "\n"
-            result = result + str(temp)
-            name_overlap.append(name_ig[Top_Context[idx][1]].strip())
-            number += 1
+        if cos_scores[idx] > 0.5:
+            if not name_ig[idx] in name_overlap:
+                temp = str(i + 1) + "번 " + name_ig[idx].strip() + ', ' + corpus_ig[idx].strip() + '\n'
+                result = result + str(temp)
+                name_overlap.append(name_ig[idx].strip())
+                number += 1
 
-            """print("유사도 : ", Top_Context[idx][0])
-            print("이름 : ", name[Top_Context[idx][1]])
-            print("내용 : ", corpus[Top_Context[idx][1]])
-            name_overlap.append(name[Top_Context[idx][1]].strip())
-            number += 1"""
-
-        return result
+    return result
 
 
 @app.route("/slack", methods=["GET", "POST"])
@@ -332,7 +313,7 @@ def download_file(file_dir):
     path = './server/data/rsc/'
     filename = file_dir+'/'+os.listdir(path + file_dir)[0]
     print(filename)
-    return send1_from_directory("/server/data/rsc/", filename)
+    return send_from_directory("/server/data/rsc/", filename)
 
 @app.route("/slack/message_actions", methods=["POST"])
 def message_actions():
