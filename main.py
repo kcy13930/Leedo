@@ -326,7 +326,7 @@ def hears():
 def index():
     return "Hello World"
 
-@app.route('/server/data/rsc/<path>')
+@app.route('/server/data/rsc/<path:path>')
 def download_file(path):
     filename = path+'/'+os.listdir(path)[0]
     return send_from_directory("res", filename)
