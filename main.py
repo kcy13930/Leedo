@@ -201,6 +201,7 @@ def event_handler(event_type, slack_event):
         text = ''
         if message_query[1] == '!':
             text = im_ground(message_query)
+            print(text)
             slack.chat.post_message(channel, text)
         else:
             text = question_answer(message_query)
