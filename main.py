@@ -202,11 +202,11 @@ def event_handler(event_type, slack_event):
         if message_query[1] == '!':
             text = im_ground(message_query)
             print(text)
-            slack.chat.post_message(channel, text)
+            slack.chat.post_message("C01BU8W3GGG", text)
         else:
             text = question_answer(message_query)
             print(text)
-            slack.chat.post_message(channel, attachments=[text])
+            slack.chat.post_message("C01BU8W3GGG", attachments=[text])
 
         return make_response("앱 멘션 메시지가 보내졌습니다.", 202,)
 
