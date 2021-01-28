@@ -24,14 +24,13 @@ def reconstruct_dataframe(json_df):
 
     question_file = json_df.loc[0, "질문자 file"]
     question_df = json_df.loc[0, "질문내용"]
-    if question_file != None:
-        print(question_file)
+    if question_file != '':
         question_file = url + question_file
         question_df += '\n' + question_file
 
     result_file = json_df.loc[0, "답변자 file"]
     result_df = "답변(" + json_df.loc[0, '답변자 이름'] + ")" + '\n' + json_df.loc[0, "답변내용"]
-    if result_file != None:
+    if result_file != '':
         result_file = url + result_file
         result_df += '\n' + result_file
 
@@ -39,9 +38,9 @@ def reconstruct_dataframe(json_df):
         if id_temp != json_df.loc[i, "질문 메세지 id"]:
             questions.append(question_df)
 
-            result_file = json_df.loc[i, "답변자 file"]
+            result_file = json_df.loc[i-1, "답변자 file"]
             result_df = "질문(" + json_df.loc[i - 1, '질문자 이름'] + ')' + '\n' + question_df + "\n\n\n" +result_df
-            if result_file != None:
+            if result_file != '':
                 result_file = url + result_file
                 result_df += '\n' + result_file
 
@@ -52,13 +51,13 @@ def reconstruct_dataframe(json_df):
 
         question_file = json_df.loc[i, "질문자 file"]
         question_df = json_df.loc[i, "질문내용"]
-        if question_file != None:
+        if question_file != '':
             question_file = url + question_file
             question_df += '\n' + question_file
 
         result_file = json_df.loc[i, "답변자 file"]
         result_df = result_df + '\n\n' + "답변(" + json_df.loc[i, '답변자 이름'] + ")" + '\n' + str(json_df.loc[i, "답변내용"])
-        if result_file != None:
+        if result_file != '':
             result_file = url + result_file
             result_df += '\n' + result_file
 
