@@ -326,9 +326,10 @@ def hears():
 def index():
     return "Hello World"
 
-@app.route('/server/data/rsc/<path:path>')
+@app.route('/server/data/rsc/<path:file_dir>')
 def download_file(path):
-    filename = path+'/'+os.listdir(path)[0]
+    path = 'server/data/rsc/'
+    filename = path+os.listdir(path+file_dir)[0]
     return send_from_directory("res", filename)
 
 @app.route("/slack/message_actions", methods=["POST"])
