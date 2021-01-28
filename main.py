@@ -196,6 +196,7 @@ def event_handler(event_type, slack_event):
 
     if event_type == "message":
         channel = slack_event["event"]["channel"]
+        print(channel)
         message_query = slack_event["event"]["text"]
         text = ''
         if message_query[1] == '!':
