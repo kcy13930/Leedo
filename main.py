@@ -98,8 +98,8 @@ name_ig = dataset_ig['name'].values.tolist()
 name_ig = [word.replace('\xa0',' ') for word in name_ig]
 
 # qa_part
-corpus_qa = [x for x in dataset_qa['질문내용']]
-corpus_answer = [x for x in dataset_qa['결과 값']]
+corpus_qa = [str(x) for x in dataset_qa['질문내용']]
+corpus_answer = [str(x) for x in dataset_qa['결과 값']]
 
 attachment_answer_json = {
 	"blocks": [
