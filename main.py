@@ -176,11 +176,10 @@ app = Flask(__name__)
 
 
 def get_answer():
-    return "EA (EconoAsistant) 사용법 \n\n1. Q&A \n\n - 키워드를 통해 분야에 대해 알아봐요 - \n   " \
-           "느낌표 1개 (!)를 붙이고 키워드나 문구를 \n   적으면 관련된 질의 응답을 알려드립니다.\n\n2. " \
+    return "EA (EconoAsistant) 사용법 \n\n1. Q&A 검색엔진 \n\n - 키워드를 통해 분야에 대해 알아봐요 - \n   " \
+           "느낌표 1개 (!)를 붙이고 키워드나 문구를 \n   적으면 관련된 과거 에코노인들의 정보를 찾아드려요!.\n\n2. " \
            "I'm Ground \n\n - 키워드를 통해 에코노인을 알아봐요 - \n   느낌표 2개 (!!)를 붙이고 키워드나 " \
-           "문구를 \n   적으면 관련된 사람을 알려드립니다. \n\n%주의사항% \n\n - 맞춤법 필수, 이모티콘이나 " \
-           "특수문자를 사용하지 마세요 "
+           "문구를 \n   적으면 관련된 사람을 알려드립니다.
 
 
 def event_handler(event_type, slack_event):
@@ -273,7 +272,7 @@ def im_ground(query_input):
     for i, idx in enumerate(top_results_ig[0:top_k]):
         if number > 5:
             break
-        if cos_scores[idx] > 0.4:
+        if cos_scores[idx] > 0.3:
             if not name_ig[idx] in name_overlap:
                 temp = str(i + 1) + "번 " + name_ig[idx].strip() + ', ' + corpus_ig[idx].strip() + '\n'
                 result = result + str(temp)
