@@ -179,7 +179,7 @@ def get_answer():
     return "EA (EconoAsistant) 사용법 \n\n1. Q&A 검색엔진 \n\n - 키워드를 통해 분야에 대해 알아봐요 - \n   " \
            "느낌표 1개 (!)를 붙이고 키워드나 문구를 \n   적으면 관련된 과거 에코노인들의 정보를 찾아드려요!.\n\n2. " \
            "I'm Ground \n\n - 키워드를 통해 에코노인을 알아봐요 - \n   느낌표 2개 (!!)를 붙이고 키워드나 " \
-           "문구를 \n   적으면 관련된 사람을 알려드립니다.
+           "문구를 \n   적으면 관련된 사람을 알려드립니다."
 
 
 def event_handler(event_type, slack_event):
