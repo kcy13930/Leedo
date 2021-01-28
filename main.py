@@ -23,23 +23,35 @@ def reconstruct_dataframe(json_df):
     url = 'http://168.131.30.128:8080/server/data/rsc/'
 
     question_file = json_df.loc[0, "질문자 file"]
-    if question_file is not None: question_file = url + question_file
+    if question_file is not None:
+        question_file = url + question_file
     question_df = json_df.loc[0, "질문내용"]
-    question_df = question_df if question_file is None else question_df + '\n' + question_file
+    if question_file is None:
+        question_df = question_df
+    else:
+        question_df + '\n' + question_file
 
     result_file = json_df.loc[0, "답변자 file"]
-    if result_file is not None: result_file = url + result_file
+    if result_file is not None:
+        result_file = url + result_file
     result_df = "답변(" + json_df.loc[0, '답변자 이름'] + ")" + '\n' + json_df.loc[0, "답변내용"]
-    result_df = result_df if result_file is None else result_df + '\n' + result_file
+    if result_file is None:
+        result_df = result_df
+    else:
+        result_df + '\n' + result_file
 
     for i in range(1, len(json_df)):
         if id_temp != json_df.loc[i, "질문 메세지 id"]:
             questions.append(question_df)
 
             result_file = json_df.loc[i, "답변자 file"]
-            if result_file is not None: result_file = url + result_file
+            if result_file is not None:
+                result_file = url + result_file
             result_df = "질문(" + json_df.loc[i - 1, '질문자 이름'] + ')' + '\n' + question_df + "\n\n\n" +result_df
-            result_df = result_df if result_file is None else result_df + '\n' + result_file
+            if result_file is None:
+                result_df = result_df
+            else:
+                result_df + '\n' + result_file
 
             results.append(result_df)
             result_df = ''
@@ -47,14 +59,20 @@ def reconstruct_dataframe(json_df):
         id_temp = json_df.loc[i, "질문 메세지 id"]
 
         question_file = json_df.loc[i, "질문자 file"]
-        if question_file is not None: question_file = url + question_file
+        if question_file is not None:
+            question_file = url + question_file
         question_df = json_df.loc[i, "질문내용"]
-        question_df = question_df if question_file is None else question_df + '\n' + question_file
+        if question_file is None:
+            question_df = question_df
+        else: question_df + '\n' + question_file
 
         result_file = json_df.loc[i, "답변자 file"]
-        if result_file is not None: result_file = url + result_file
+        if result_file is not None:
+            result_file = url + result_file
         result_df = result_df + '\n\n' + "답변(" + json_df.loc[i, '답변자 이름'] + ")" + '\n' + str(json_df.loc[i, "답변내용"])
-        result_df = result_df if result_file is None else result_df + '\n' + result_file
+        if result_file is None:
+            result_df = result_df
+        else: result_df + '\n' + result_file
 
     reconstruct_df = pd.DataFrame({"질문내용": questions, "결과 값": results})
     return reconstruct_df
@@ -304,7 +322,7 @@ def index():
 @app.route('/server/data/rsc/<file_dir>')
 def download_file(file_dir):
     path = './server/data/rsc/'
-    filename = file_dir+'/'+os.listdir(path + file_dir)[0]
+    filename = path+os.listdir(path + file_dir)[0]
     print(filename)
     return send_from_directory("/server/data/rsc/", filename)
 
