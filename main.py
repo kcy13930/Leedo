@@ -12,28 +12,23 @@ import scipy.stats
 token =
 slack = Slacker(token)
 
-slack.chat.post_message("C01BU8W3GGG", "slacker 테스트")
 # 전역변수 선언
 status_value = False
 top_results =''
-
 
 def reconstruct_dataframe(json_df):
     questions = []
     results = []
     id_temp = json_df.loc[0, "질문 메세지 id"]
-    url = 'http://168.131.30.128:8080/'
-    path = 'server/data/rsc/'
+    url = 'http://168.131.30.128:8080/server/data/rsc/'
 
-    question_file = path + json_df.loc[0, "질문자 file"]
-    question_file += '/' + os.listdir(question_file)[0] if os.path.isdir(question_file) else ''
-    question_file = url + question_file
+    question_file = json_df.loc[0, "질문자 file"]
+    if question_file is not None: question_file = url + question_file
     question_df = json_df.loc[0, "질문내용"]
     question_df = question_df if question_file is None else question_df + '\n' + question_file
 
-    result_file = path + json_df.loc[0, "답변자 file"]
-    result_file += '/' + os.listdir(result_file)[0] if os.path.isdir(result_file) else ''
-    result_file = url + result_file
+    result_file = json_df.loc[0, "답변자 file"]
+    if result_file is not None: result_file = url + result_file
     result_df = "답변(" + json_df.loc[0, '답변자 이름'] + ")" + '\n' + json_df.loc[0, "답변내용"]
     result_df = result_df if result_file is None else result_df + '\n' + result_file
 
@@ -41,9 +36,8 @@ def reconstruct_dataframe(json_df):
         if id_temp != json_df.loc[i, "질문 메세지 id"]:
             questions.append(question_df)
 
-            result_file = path +  json_df.loc[i, "답변자 file"]
-            result_file += '/' + os.listdir(result_file)[0] if os.path.isdir(result_file) else ''
-            result_file = url + result_file
+            result_file = json_df.loc[i, "답변자 file"]
+            if result_file is not None: result_file = url + result_file
             result_df = "질문(" + json_df.loc[i - 1, '질문자 이름'] + ')' + '\n' + question_df + "\n\n\n" +result_df
             result_df = result_df if result_file is None else result_df + '\n' + result_file
 
@@ -52,15 +46,13 @@ def reconstruct_dataframe(json_df):
 
         id_temp = json_df.loc[i, "질문 메세지 id"]
 
-        question_file = path + json_df.loc[i, "질문자 file"]
-        question_file += '/' + os.listdir(question_file)[0] if os.path.isdir(question_file) else ''
-        question_file = url + question_file
+        question_file = json_df.loc[i, "질문자 file"]
+        if question_file is not None: question_file = url + question_file
         question_df = json_df.loc[i, "질문내용"]
         question_df = question_df if question_file is None else question_df + '\n' + question_file
 
-        result_file = path + json_df.loc[i, "답변자 file"]
-        result_file += '/' + os.listdir(result_file)[0] if os.path.isdir(result_file) else ''
-        result_file = url + result_file
+        result_file = json_df.loc[i, "답변자 file"]
+        if result_file is not None: result_file = url + result_file
         result_df = result_df + '\n\n' + "답변(" + json_df.loc[i, '답변자 이름'] + ")" + '\n' + str(json_df.loc[i, "답변내용"])
         result_df = result_df if result_file is None else result_df + '\n' + result_file
 
@@ -276,7 +268,7 @@ def im_ground(query_input):
     for i, idx in enumerate(top_results_ig[0:top_k]):
         if number > 5:
             break
-        if cos_scores[idx] > 0.5:
+        if cos_scores[idx] > 0.4:
             if not name_ig[idx] in name_overlap:
                 temp = str(i + 1) + "번 " + name_ig[idx].strip() + ', ' + corpus_ig[idx].strip() + '\n'
                 result = result + str(temp)
